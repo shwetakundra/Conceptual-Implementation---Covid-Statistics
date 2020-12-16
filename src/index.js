@@ -12,7 +12,7 @@ app.get("/totalRecovered", async (req, res) => {
     const resDoc = await covidTallyModel.aggregate([{
         $group: {
             _id: "total",
-            recoverd: { $sum: "$recovered" }
+            recovered: { $sum: "$recovered" }
         }
     }
     ])
@@ -44,10 +44,11 @@ app.get("/totalDeath", async (req, res) => {
     res.send({ data: firstResult })
 })
 app.get("/hotspotStates", async(req, res) => {
-    const resDoc = await covidTallyModel.aggregate([{
+    const resDoc = await covidTallyModel.aggregate([
+        {
         $project: {
             state: "$state",
-            reate: { $round: [{ $divide: [{ $subtract: ['$infected', '$recovered'] }, "$infected"], }, 5,], },
+            rate: { $round: [{ $divide: [{ $subtract: ['$infected', '$recovered'] }, "$infected"], }, 5,], },
         },
 
     },
